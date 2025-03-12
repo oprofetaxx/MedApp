@@ -3,7 +3,7 @@ import DoctorService from "../services/DoctorService.js";
 
 let router = express.Router();
 
-// ✅ Criar um novo médico (POST)
+//  Criar um novo médico (POST)
 router.post('/postDoctor', async (req, res) => {
   const { name, login, password, medicalSpecialty, medicalRegistration, email, phone } = req.body;
   console.log("Dados recebidos:", req.body);
@@ -29,7 +29,7 @@ router.post('/postDoctor', async (req, res) => {
   }
 });
 
-// ✅ Obter todos os médicos (GET ALL)
+//  Obter todos os médicos (GET ALL)
 router.get('/', async (req, res) => {
     try {
         const doctors = await DoctorService.getAllDoctors();
@@ -40,7 +40,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-// ✅ Obter um médico específico pelo ID (GET)
+//  Obter um médico específico pelo ID (GET)
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   try {
@@ -56,7 +56,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// ✅ Atualizar um médico existente (PUT)
+//  Atualizar um médico existente (PUT)
 router.put('/update/:id', async (req, res) => {
     const { id } = req.params;
     const { name, login, password, medicalSpecialty, medicalRegistration, email, phone } = req.body;
@@ -87,7 +87,7 @@ router.put('/update/:id', async (req, res) => {
     }
 });
 
-// ✅ Deletar um médico pelo ID (DELETE)
+//  Deletar um médico pelo ID (DELETE)
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 

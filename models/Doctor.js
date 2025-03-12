@@ -36,7 +36,7 @@ import bcrypt from 'bcryptjs';
                     return /\d{2} 9\d{4}-\d{4}/.test(v);
                 },
                 message:props => `${props.value} this is not phone value.please use the following format 9 9999-9999`
-                },
+                
             }
         }
     });
