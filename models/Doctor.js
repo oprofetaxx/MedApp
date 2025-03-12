@@ -6,38 +6,45 @@ import bcrypt from 'bcryptjs';
     const doctorSchema = new mongoose.Schema({
         name: {
             type: String,
-            required: true
+            required: [true, "Doctor name is required."]
         },
         login: {
             type: String,
-            required: true
+            required: [true, "login is required."]
         },
         password: {
             type: String,
-            required: true
+            required:[true, "password is required."]
         },
         medicalSpecialty: {
             type: String,
-            required: true
+            required: [true, "Medical Specialty is required."]
         },
         medicalRegistration: {
             type: String,
-            required: true
+            required: [true, "Medical Registration is required."]
         },
         email: {
             type: String,
-            required: true
+            required: [true, "Email contact is required."]
         },
         phone: {
             type: String,
-            required: true
+            required: [true, "phone number is required."],
+            validate:{
+                validator: function(v){
+                    return /\d{2} 9\d{4}-\d{4}/.test(v);
+                },
+                message:props => `${props.value} this is not phone value.please use the following format 9 9999-9999`
+                },
+            }
         }
     });
 
     // Antes de salvar, criptografa a senha
 doctorSchema.pre('save', async function(next) {
     if (!this.isModified('password')) {
-        return next(); // Se a senha não foi modificada, não faz nada
+        return next(); 
     }
 
     try {
