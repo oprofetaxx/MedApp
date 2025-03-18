@@ -22,12 +22,20 @@ const deleteDoctor = async (id) => {
   return await Doctor.findByIdAndDelete(id); // Alterado para usar o modelo diretamente
 };
 
+
+//login
+const getDoctorByLogin = async (login) => {
+
+  return await DoctorRepository.getDoctorByLogin( login );
+};
+
 const DoctorService = {
   saveDoctor,
   getDoctor,
   getAllDoctors,
   updateDoctor,
-  deleteDoctor,  // Certifique-se de que está sendo exportado
+  deleteDoctor, 
+  getDoctorByLogin
 };
 
 export default DoctorService;
