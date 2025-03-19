@@ -1,22 +1,23 @@
 import jwt from 'jsonwebtoken';
+import express from 'express';
 
-function verifyToken(req, res, next) {
-    const token = req.headers('Authorization');
-    if(!token){
-        return res.status(401).json({error: 'Access Denied! '});
+function verifyToken(req, res, next) 
+{
+    const token = req.headers('Autorization');
+    if (!token) {
+        return res.status(401).json({ message: 'Access Denied!' });
 
     }
-
-    try{
-        const decoded = jwt.verify(token, 'you-scret-key');
-        req.doctorId = decoded.doctorId;
+    try{ 
+        const decoded = jwt.verify(token, 'secretKey');
+        req.doctorid = decoded.doctorid;
         next();
 
-
-    } catch(error){
-        res.status(401).json({error: 'Invalid Token'});
+        
+    } catch (error) {
+        return res.status(401).json({ message: 'Invalid Token' });
     }
-
 };
 
-    export default verifyToken;
+export default verifyToken;
+

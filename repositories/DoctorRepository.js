@@ -1,3 +1,4 @@
+import { get } from "mongoose";
 import Doctor from "../models/Doctor.js";
 
 // Função para obter todos os médicos

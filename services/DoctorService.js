@@ -1,4 +1,5 @@
 import Doctor from "../models/Doctor.js";  // Certifique-se de importar o modelo correto
+import DoctorRepository from "../repositories/DoctorRepository.js";
 
 const saveDoctor = async (doctorData) => {
   return await Doctor.create(doctorData);
@@ -34,7 +35,7 @@ const DoctorService = {
   getDoctor,
   getAllDoctors,
   updateDoctor,
-  deleteDoctor, 
+  deleteDoctor,
   getDoctorByLogin
 };
 
