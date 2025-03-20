@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const prescriptionSchema = new mongoose.Schema({
     date: {
         type: Date,
-        required: true
+        
     },
     appointmentId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -21,6 +21,9 @@ const prescriptionSchema = new mongoose.Schema({
     instructions: {
         type: String,
         required: true
+    },
+    file: {
+        type: String
     }
 }, { timestamps: true });  // Cria campos createdAt e updatedAt automaticamente
 

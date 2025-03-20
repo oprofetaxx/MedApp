@@ -19,13 +19,14 @@ const savePrescription = async ({ date, appointmentId, medicine, dosage, instruc
     return await prescription.save();  // Salva a prescrição no banco de dados
 }
 
-const updatePrescription = async (id, { date, appointmentId, medicine, dosage, instructions }) => {
+const updatePrescription = async (id, { date, appointmentId, medicine, dosage, instructions, file }) => {
     return await Prescription.findByIdAndUpdate(id, {
         date,
         appointmentId,
         medicine,
         dosage,
-        instructions
+        instructions,
+        file
     }, { new: true });  // Atualiza a prescrição
 }
 
