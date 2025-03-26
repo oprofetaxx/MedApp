@@ -1,28 +1,21 @@
 import express from "express";
-import doctorRoutes from "./routes/DoctorController.js";
-import appointmentRoutes from "./routes/AppointmentController.js";
-import pacientRoutes from "./routes/PacientController.js";
+import pkg  from "body-parser";
+import router from "./routes/router.js";  // Certifique-se de que o caminho do arquivo está correto
 import db from "./database/database.js";
-import prescriptionRoutes from "./routes/PrescriptionController.js";
-import router from "./routes/router.js";
-import bcrypt from "bcryptjs";
-
+import cors from "cors";
 
 const app = express();
-const port = 3001;
+const { json, urlencoded } = pkg;
 
+app.use(json());
+app.use(urlencoded({ extended: true }));
+app.use(cors());
 app.use(express.json());
 
-app.use("/doctor", doctorRoutes);
-app.use("/appointment", appointmentRoutes);
-app.use("/pacient", pacientRoutes);
-app.use("/prescriptions", prescriptionRoutes);
-app.use("/", router);
 
-app.listen(port, () => {
-  console.log(`Servidor rodando na porta ${port}`);
+
+app.use("/", router);  // Aqui estamos configurando o prefixo "/api" para todas as rotas
+
+app.listen(3001, function() {
+    console.log("Listening to port 3001");
 });
-
-
-
-

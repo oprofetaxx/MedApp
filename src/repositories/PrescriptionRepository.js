@@ -1,40 +1,48 @@
-import Prescription from "../models/Prescription.js"; 
+import Prescription from "../models/Prescription.js"
 
 const getAllPrescriptions = async () => {
-    return await Prescription.find();  // Recupera todas as prescrições
+    try{
+        return await Prescription.find();
+    }catch(error){
+        throw new Error(error);
+    }
 }
 
 const getPrescription = async (id) => {
-    return await Prescription.findById(id);  // Busca a prescrição pelo ID
+    try{
+        return await Prescription.findById(id);
+    }catch(error){
+        throw new Error(error);
+    }
 }
 
 const savePrescription = async ({ date, appointmentId, medicine, dosage, instructions }) => {
-    const prescription = new Prescription({
-        date,
-        appointmentId,
-        medicine,
-        dosage,
-        instructions
-    });
-    return await prescription.save();  // Salva a prescrição no banco de dados
+    try{
+        const prescription = new Prescription({ date, appointmentId, medicine, dosage, instructions });
+        return await prescription.save();
+    }catch(error){
+        throw new Error(error);
+    }
 }
 
 const updatePrescription = async (id, { date, appointmentId, medicine, dosage, instructions, file }) => {
-    return await Prescription.findByIdAndUpdate(id, {
-        date,
-        appointmentId,
-        medicine,
-        dosage,
-        instructions,
-        file
-    }, { new: true });  // Atualiza a prescrição
+    try{
+        return await Prescription.findByIdAndUpdate(id,
+             { date, appointmentId, medicine, dosage, instructions, file }, { new: true });
+    }catch(error){
+        throw new Error(error);
+    }
 }
 
 const deletePrescription = async (id) => {
-    return await Prescription.findByIdAndDelete(id);  // Deleta a prescrição
+    try{
+        return await Prescription.findByIdAndDelete(id);
+    }catch(error){
+        throw new Error(error);
+    }
 }
-
-const PrescriptionRepository = {
+ 
+const prescriptionRepository = {
     getAllPrescriptions,
     getPrescription,
     savePrescription,
@@ -42,4 +50,4 @@ const PrescriptionRepository = {
     deletePrescription
 }
 
-export default PrescriptionRepository;
+export default prescriptionRepository;

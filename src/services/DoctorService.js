@@ -1,42 +1,37 @@
-import Doctor from "../models/Doctor.js";  // Certifique-se de importar o modelo correto
-import DoctorRepository from "../repositories/DoctorRepository.js";
-
-const saveDoctor = async (doctorData) => {
-  return await Doctor.create(doctorData);
-};
-
-const getDoctor = async (id) => {
-  return await Doctor.findById(id);
-};
+import DoctorRepository from "../repositories/DoctorRepository.js"
 
 const getAllDoctors = async () => {
-  return await Doctor.find();
-};
+    return await DoctorRepository.getAllDoctors();
+}
 
-const updateDoctor = async (id, doctorData) => {
-  return await Doctor.findByIdAndUpdate(id, doctorData, { new: true });
-};
+const getDoctor = async (id) => {
+    return await DoctorRepository.getDoctor(id);
+}
 
-// Deletar médico pelo ID
+const saveDoctor = async ({ name, login, password, medicalSpecialty, medicalRegistration, email, phone }) => {
+    return await DoctorRepository.saveDoctor({ name, login, password, medicalSpecialty, medicalRegistration, email, phone });
+}
+
+const updateDoctor = async (id, { name, login, password, medicalSpecialty, medicalRegistration, email, phone }) => {
+    return await DoctorRepository.updateDoctor(id, { name, login, password, medicalSpecialty, medicalRegistration, email, phone });
+}
+
 const deleteDoctor = async (id) => {
-  console.log("Tentando deletar ID:", id); // 🛠️ Debug
-  return await Doctor.findByIdAndDelete(id); // Alterado para usar o modelo diretamente
-};
+    return await DoctorRepository.deleteDoctor(id);
+}
 
+// login
+const getDoctorByLogin = async(login) => {
+   return await DoctorRepository.getDoctorByLogin(login);
+}
 
-//login
-const getDoctorByLogin = async (login) => {
+const doctorService = {
+    getAllDoctors,
+    getDoctor,
+    saveDoctor,
+    updateDoctor,
+    deleteDoctor,
+    getDoctorByLogin
+}
 
-  return await DoctorRepository.getDoctorByLogin( login );
-};
-
-const DoctorService = {
-  saveDoctor,
-  getDoctor,
-  getAllDoctors,
-  updateDoctor,
-  deleteDoctor,
-  getDoctorByLogin
-};
-
-export default DoctorService;
+export default doctorService;

@@ -1,108 +1,79 @@
 import express from "express";
+import bcrypt from 'bcrypt';
 import DoctorService from "../services/DoctorService.js";
 
 let router = express.Router();
 
-//  Criar um novo médico (POST)
-router.post('/postDoctor', async (req, res) => {
-  const { name, login, password, medicalSpecialty, medicalRegistration, email, phone } = req.body;
-  console.log("Dados recebidos:", req.body);
-
-  if (!name || !login || !password || !medicalSpecialty || !medicalRegistration || !email || !phone) {
-    return res.status(400).json({ message: "Missing required fields" });
-  }
-
-  try {
-    const doctor = await DoctorService.saveDoctor({
-      name,
-      login,
-      password,
-      medicalSpecialty,
-      medicalRegistration,
-      email,
-      phone
-    });
-    res.status(201).json(doctor);
-  } catch (error) {
-    console.log("Erro ao salvar médico:", error);
-    res.status(500).json({ message: "Internal Server Error", error: error.message });
-  }
-});
-
-//  Obter todos os médicos (GET ALL)
-router.get('/', async (req, res) => {
+// Rota para obter todos os médicos
+// GET /api/doctors
+router.get('/doctors', async (req, res) => {
     try {
         const doctors = await DoctorService.getAllDoctors();
-        res.status(200).json(doctors);
-    } catch (error) { 
-        console.log("Erro ao obter médicos:", error);
-        res.status(500).json({ message: "Internal Server Error", error: error.message });
-    }
-});
-
-//  Obter um médico específico pelo ID (GET)
-router.get('/:id', async (req, res) => {
-  const { id } = req.params;
-  try {
-    const doctor = await DoctorService.getDoctor(id);
-
-    if (!doctor) {
-      return res.status(404).json({ message: "Doctor not found" });
-    }
-    res.status(200).json(doctor);
-  } catch (error) {
-    console.log("Erro ao buscar médico:", error);
-    res.status(500).json({ message: "Internal Server Error", error: error.message });
-  }
-});
-
-//  Atualizar um médico existente (PUT)
-router.put('/update/:id', async (req, res) => {
-    const { id } = req.params;
-    const { name, login, password, medicalSpecialty, medicalRegistration, email, phone } = req.body;
-
-    if (!name || !login || !password || !medicalSpecialty || !medicalRegistration || !email || !phone) {
-        return res.status(400).json({ message: "Missing required fields" });
-    }
-
-    try { 
-        const doctor = await DoctorService.updateDoctor(id, {
-            name,
-            login,
-            password,
-            medicalSpecialty,
-            medicalRegistration,
-            email,
-            phone
-        });
-
-        if (!doctor) {
-            return res.status(404).json({ message: "Doctor not found" });
-        }
-
-        res.status(200).json(doctor);
+        res.send(doctors); // Envia a lista de médicos
     } catch (error) {
-        console.error("Erro ao atualizar médico:", error);
-        res.status(500).json({ message: "Internal Server Error", error: error.message });
+        console.error(error);
+        res.status(500).send(error); // Retorna erro em caso de falha
     }
 });
 
-//  Deletar um médico pelo ID (DELETE)
-router.delete('/:id', async (req, res) => {
+// Rota para obter um médico específico por ID
+// GET /api/doctors/getDoctor/:id
+router.get('/getDoctor/:id', async (req, res) => {
   const { id } = req.params;
-
   try {
-      const deletedDoctor = await DoctorService.deleteDoctor(id);
-      if (!deletedDoctor) {
-          return res.status(404).json({ message: "Doctor not found" });
-      }
-      res.status(200).json({ message: "Doctor deleted successfully" });
+      const doctor = await DoctorService.getDoctor(id);
+      res.send(doctor);
   } catch (error) {
-      console.log("Erro ao deletar médico:", error);
-      res.status(500).json({ message: "Internal Server Error", error: error.message });
+      console.error(error);
+      res.status(500).send(error);
   }
 });
 
+// Rota para registrar um novo médico
+// POST /api/doctors/postDoctor
+router.post('/doctors/postDoctor', async (req, res) => {
+    const { name, login, password, medicalSpecialty, medicalRegistration, email, phone } = req.body;
+    try {
+        // Criptografa a senha do médico antes de salvar
+        const hashedPassword = await bcrypt.hash(password, 10); 
+        // Salva o novo médico no banco de dados
+        const doctor = await DoctorService.saveDoctor({ name, login, password: hashedPassword, medicalSpecialty, medicalRegistration, email, phone });
+        res.status(201).send(doctor); // Retorna o médico criado
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Falha ao registrar médico" + error); // Retorna erro em caso de falha
+    }
+});
 
+// Rota para atualizar os dados de um médico
+// PUT /api/doctors/:id
+router.put('/doctors/:id', async (req, res) => {
+  const { id } = req.params; // Pega o id do médico a ser atualizado
+  const { name, login, password, medicalSpecialty, medicalRegistration, email, phone } = req.body;
+
+  try {
+    // Atualiza o médico com os novos dados fornecidos
+    const doctor = await DoctorService.updateDoctor(id, { name, login, password, medicalSpecialty, medicalRegistration, email, phone });
+    res.send(doctor); // Retorna o médico atualizado
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error); // Retorna erro em caso de falha
+  }
+});
+
+// Rota para excluir um médico
+// DELETE /api/doctors/:id
+router.delete('/doctors/:id', async (req, res) => {
+  const { id } = req.params; // Pega o id do médico a ser excluído
+
+  try {
+    // Exclui o médico do banco de dados
+    const doctor = await DoctorService.deleteDoctor(id);
+    res.send(doctor); // Retorna a confirmação da exclusão
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error); // Retorna erro em caso de falha
+  }
+});
 
 export default router;

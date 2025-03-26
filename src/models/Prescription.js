@@ -1,32 +1,36 @@
-import mongoose from "mongoose";
+import { mongoose } from "mongoose";
 
-const prescriptionSchema = new mongoose.Schema({
+const Schema = mongoose.Schema;
+
+const prescriptionSchema = new Schema ({
     date: {
-        type: Date,
-        
+        type: Date
     },
     appointmentId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Appointment',  // Se você tiver um modelo Appointment
-        required: true
+        type: String,
+        required: [true, 'Appointment ID is required.']
     },
     medicine: {
         type: String,
-        required: true
+        required: [true, 'Medicine is required.']
     },
     dosage: {
         type: String,
-        required: true
+        required: [true, 'Dosage is required.']
     },
     instructions: {
-        type: String,
-        required: true
+        type: String
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
     },
     file: {
         type: String
     }
-}, { timestamps: true });  // Cria campos createdAt e updatedAt automaticamente
+}
+);
 
-const Prescription = mongoose.model('Prescription', prescriptionSchema);
+const prescription = mongoose.model('Prescription', prescriptionSchema);
 
-export default Prescription;
+export default prescription;

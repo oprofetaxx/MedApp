@@ -1,54 +1,72 @@
-import express from "express";
-import AppointmentService from "../services/AppointmentService.js"; // Importando o serviço correto
+import Appointment from "../models/Appointment.js";
 
-const router = express.Router();
+const getAllAppointments = async () => {
+    return await Appointment.find();
+}
 
-// ✅ Rota para obter todos os agendamentos
-router.get("/", async (req, res) => {
+const getAppointment = async (id) => {
     try {
-        const appointments = await AppointmentService.getAllAppointments();
-        res.status(200).json(appointments);
+        return await Appointment.findById(id);
     } catch (error) {
-        console.log("Erro ao obter agendamentos:", error);
-        res.status(500).json({ message: "Erro ao obter agendamentos", error: error.message });
+        throw new Error(error);
     }
-});
+}
 
-// ✅ Rota para obter um agendamento específico pelo ID
-router.get("/:id", async (req, res) => {
-    const { id } = req.params;
+const saveAppointment = async ({ date, doctorId, patientId, time }) => {
     try {
-        const appointment = await AppointmentService.getAppointmentById(id);
-        if (!appointment) {
-            return res.status(404).json({ message: "Agendamento não encontrado" });
+        const doctorExists = await Doctor.exists({ _id: doctorId });
+        const patientExists = await Pacient.exists({ _id: patientId });
+
+        console.log(`Doctor exists: ${doctorExists}, Patient exists: ${patientExists}`);
+
+        if (!doctorExists) {
+            console.log(`Doctor with ID ${doctorId} not found.`);
+            throw new Error(`Doctor with ID ${doctorId} not found.`);
         }
-        res.status(200).json(appointment);
-    } catch (error) {
-        console.log("Erro ao buscar agendamento:", error);
-        res.status(500).json({ message: "Erro ao buscar agendamento", error: error.message });
-    }
-});
 
-// ✅ Rota para criar um novo agendamento
-router.post("/", async (req, res) => {
-    const { doctorId, patientId, date, time } = req.body;
+        if (!patientExists) {
+            console.log(`Patient with ID ${patientId} not found.`);
+            throw new Error(`Patient with ID ${patientId} not found.`);
+        }
 
-    if (!doctorId || !patientId || !date || !time) {
-        return res.status(400).json({ message: "Campos obrigatórios ausentes" });
-    }
-
-    try {
-        const appointment = await AppointmentService.saveAppointment({
+        const newAppointment = new Appointment({
             doctorId,
             patientId,
-            date,
+            date: new Date(date),  // Converte a data para um formato aceito pelo banco de dados
             time
         });
-        res.status(201).json(appointment);
-    } catch (error) {
-        console.error("Erro ao salvar agendamento:", error);
-        res.status(500).json({ message: "Erro ao salvar o agendamento", error: error.message });
-    }
-});
 
-export default router;
+        const savedAppointment = await newAppointment.save();
+        console.log("Agendamento salvo no banco:", savedAppointment);
+        return savedAppointment;
+    } catch (error) {
+        console.error("Erro ao salvar o agendamento:", error);
+        throw error;
+    }
+};
+
+const updateAppointment = async (id, {date, doctorId, pacientId}) => {
+    try {
+        return await Appointment.findByIdAndUpdate(id, {date, doctorId, pacientId}, {new: true} );
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+const deleteAppointment = async (id) => {
+    try {
+        return await Appointment.findByIdAndDelete(id);
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+const appointmentRepository = {
+    getAllAppointments,
+    getAppointment,
+    saveAppointment,
+    updateAppointment,
+    deleteAppointment
+}
+
+export default appointmentRepository;

@@ -1,38 +1,26 @@
-import PacientRepository from "../repositories/PacientRepository.js";
+import PacientRepository from "../repositories/PacientRepository.js"
 
-// Função para obter todos os pacientes
 const getAllPacients = async () => {
-    return PacientRepository.getAllPacients();
+    return await PacientRepository.getAllPacients();
 }
 
-// Função para obter um paciente específico pelo ID
 const getPacient = async (id) => {
-    return PacientRepository.getPacient(id); // Usar a função do repositório para obter o paciente
+    return await PacientRepository.getPacient(id);
 }
 
-// Função para salvar um novo paciente
-const savePacient = async ({ name, birthDate, contactInfo }) => {
-    return PacientRepository.savePacient({ name, birthDate, contactInfo }); // Passar birthDate no lugar de age
+const savePacient = async ({ name, birthDate, email, phone }) => {
+    return await PacientRepository.savePacient({ name, birthDate, email, phone });
 }
 
-// Função para atualizar um paciente
-const updatePacient = async (id, { name, birthDate, contactInfo }) => {
-    return PacientRepository.updatePacient(id, { name, birthDate, contactInfo }); // Atualiza os dados do paciente
+const updatePacient = async (id, { name, birthDate, email, phone }) => {
+    return await PacientRepository.updatePacient(id, { name, birthDate, email, phone });
 }
 
-// Função para deletar um paciente
 const deletePacient = async (id) => {
-    const pacient = await PacientRepository.getPacient(id);
-    if (!pacient) {
-        throw new Error("Paciente não encontrado");
-    }
-    return PacientRepository.deletePacient(id); // Remove o paciente
+    return await PacientRepository.deletePacient(id);
 }
 
-
-
-
-const PacientService = {
+const pacientService = {
     getAllPacients,
     getPacient,
     savePacient,
@@ -40,4 +28,4 @@ const PacientService = {
     deletePacient
 }
 
-export default PacientService;
+export default pacientService;

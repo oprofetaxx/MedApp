@@ -1,23 +1,19 @@
-import jwt from 'jsonwebtoken';
-import express from 'express';
+const jwt = require('jsonwebtoken');
 
-function verifyToken(req, res, next) 
-{
-    const token = req.headers["authorization"];
+const authenticate = (req, res, next) => {
+    const token = req.headers['authorization'];
+
     if (!token) {
-        return res.status(401).json({ message: 'Access Denied!' });
-
+        return res.status(403).json({ error: 'Access Denied!' });
     }
-    try{ 
-        const decoded = jwt.verify(token, 'secretKey');
-        req.doctorid = decoded.doctorid;
-        next();
 
-        
+    try {
+        const decoded = jwt.verify(token, 'sua_chave_secreta'); // Verifica o token
+        req.user = decoded; // Salva a informação do usuário no request
+        next(); // Prossegue para o próximo middleware ou rota
     } catch (error) {
-        return res.status(401).json({ message: 'Invalid Token' });
+        return res.status(401).json({ error: 'Authentication failed!' });
     }
 };
 
-export default verifyToken;
-
+module.exports = authenticate;

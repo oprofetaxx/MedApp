@@ -1,100 +1,56 @@
 import PrescriptionRepository from "../repositories/PrescriptionRepository.js";
 import AppointmentService from "./AppointmentService.js";
-import DoctorService from "./DoctorService.js";
 import PacientService from "./PacientService.js";
-import PDFDocument from "pdfkit";
+import DoctorService from "./DoctorService.js";
 import fs from 'fs';
-import path from 'path';
+import PDFDocument from "pdfkit";
 
-// Função para obter todas as prescrições
 const getAllPrescriptions = async () => {
-    return PrescriptionRepository.getAllPrescriptions();
+    return await PrescriptionRepository.getAllPrescriptions();
 }
 
-// Função para obter uma prescrição específica pelo ID
 const getPrescription = async (id) => {
-    return PrescriptionRepository.getPrescription(id);
+    return await PrescriptionRepository.getPrescription(id);
 }
 
-// Função para salvar uma nova prescrição
 const savePrescription = async ({ date, appointmentId, medicine, dosage, instructions }) => {
-    if (!date || !appointmentId || !medicine || !dosage || !instructions) {
-        throw new Error("Missing required fields: date, appointmentId, medicine, dosage, instructions.");
-    }
-
-    const parsedDate = new Date(date);
-    if (isNaN(parsedDate.getTime())) {
-        throw new Error("Invalid date format");
-    }
-
-    try {
-        return await PrescriptionRepository.savePrescription({ date, appointmentId, medicine, dosage, instructions });
-    } catch (error) {
-        console.log("Erro ao salvar prescrição no repositório:", error);
-        throw new Error("Failed to save prescription");
-    }
+    return await PrescriptionRepository.savePrescription({ date, appointmentId, medicine, dosage, instructions });
 }
 
-// Função para atualizar uma prescrição
-const updatePrescription = async (id, { date, appointmentId, medicine, dosage, instructions }) => {
-    if (!date || !appointmentId || !medicine || !dosage || !instructions) {
-        throw new Error("Missing required fields: date, appointmentId, medicine, dosage, instructions.");
-    }
-
-    const parsedDate = new Date(date);
-    if (isNaN(parsedDate.getTime())) {
-        throw new Error("Invalid date format");
-    }
-
-    try {
-        return await PrescriptionRepository.updatePrescription(id, { date, appointmentId, medicine, dosage, instructions, file });
-    } catch (error) {
-        console.log("Erro ao atualizar prescrição:", error);
-        throw new Error("Failed to update prescription");
-    }
+const updatePrescription = async (id, { date, appointmentId, medicine, dosage, instructions, file }) => {
+    return await PrescriptionRepository.updatePrescription(id,
+         { date, appointmentId, medicine, dosage, instructions, file});
 }
 
-// Função para deletar uma prescrição
 const deletePrescription = async (id) => {
-    const prescription = await PrescriptionRepository.getPrescription(id);
-    if (!prescription) {
-        throw new Error("Prescription not found");
-    }
-    return PrescriptionRepository.deletePrescription(id);
+    return await PrescriptionRepository.deletePrescription(id);
 }
 
-// Função para gerar um arquivo PDF com a prescrição
-const generatePrescriptionFile = async (prescription) => {
-    try {
-        const appointment = await AppointmentService.getAppointment(prescription.appointmentId);
-        const pacient = await PacientService.getPacient(appointment.pacientId);
-        const doctor = await DoctorService.getDoctor(appointment.doctorId);
+const generatePrescriptionFile = async(prescription) => {
+    const appointment = await AppointmentService.getAppointment(prescription.appointmentId);
+    const pacient = await PacientService.getPacient(appointment.pacientId);
+    const doctor = await DoctorService.getDoctor(appointment.doctorId);
 
-        const id = prescription._id;
-        const document = new PDFDocument({ font: 'Courier' });
+    const id = prescription._id;
+    const document = new PDFDocument({font: 'Courier'});
+    const filePath = "./prescriptions/"+ id + ".pdf";
 
-        // Criando caminho seguro para o arquivo
-        const filePath = "./MediApp/prescriptions/" + id + ".pdf";
+    document.pipe(fs.createWriteStream(filePath));
+    document.fontSize(16).text("Pacient Name: " + pacient.name);
+    document.fontSize(16).text("Doctor Name: " + doctor.name);
 
-        // Criando e escrevendo no arquivo PDF
-        document.pipe(fs.createWriteStream(filePath));
-        document.fontSize(16).text("Pacient Name: " + pacient.name);
-        document.fontSize(14).text("Doctor Name: " + doctor.name);
-        document.fontSize(12).text("Medicine: " + prescription.medicine);
-        document.fontSize(12).text("Dosage: " + prescription.dosage);
-        document.fontSize(12).text("Instructions: " + prescription.instructions);
+    const recipe = "Medicine: " + prescription.medicine;
+    document.fontSize(12).text(recipe);
 
-        document.end();
+    document.fontSize(12).text("Dose: " + prescription.dosage);
+    document.fontSize(12).text("Instructions: " + prescription.instructions);
 
-        return filePath;
-    } catch (error) {
-        console.error("Erro ao gerar o arquivo de prescrição:", error);
-        throw new Error("Failed to generate prescription file");
-    }
+    document.end();
+
+    return prescription;
 }
 
-// Exportando todas as funções corretamente
-const PrescriptionService = {
+const prescriptionService = {
     getAllPrescriptions,
     getPrescription,
     savePrescription,
@@ -103,4 +59,4 @@ const PrescriptionService = {
     generatePrescriptionFile
 }
 
-export default PrescriptionService;
+export default prescriptionService;
