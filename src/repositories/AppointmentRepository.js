@@ -12,38 +12,14 @@ const getAppointment = async (id) => {
     }
 }
 
-const saveAppointment = async ({ date, doctorId, patientId, time }) => {
+const saveAppointment = async ({date, doctorId, pacientId}) => {
     try {
-        const doctorExists = await Doctor.exists({ _id: doctorId });
-        const patientExists = await Pacient.exists({ _id: patientId });
-
-        console.log(`Doctor exists: ${doctorExists}, Patient exists: ${patientExists}`);
-
-        if (!doctorExists) {
-            console.log(`Doctor with ID ${doctorId} not found.`);
-            throw new Error(`Doctor with ID ${doctorId} not found.`);
-        }
-
-        if (!patientExists) {
-            console.log(`Patient with ID ${patientId} not found.`);
-            throw new Error(`Patient with ID ${patientId} not found.`);
-        }
-
-        const newAppointment = new Appointment({
-            doctorId,
-            patientId,
-            date: new Date(date),  // Converte a data para um formato aceito pelo banco de dados
-            time
-        });
-
-        const savedAppointment = await newAppointment.save();
-        console.log("Agendamento salvo no banco:", savedAppointment);
-        return savedAppointment;
+        const prescription = new Appointment({date, doctorId, pacientId});
+        return await prescription.save();
     } catch (error) {
-        console.error("Erro ao salvar o agendamento:", error);
-        throw error;
+        throw new Error(error);
     }
-};
+}
 
 const updateAppointment = async (id, {date, doctorId, pacientId}) => {
     try {

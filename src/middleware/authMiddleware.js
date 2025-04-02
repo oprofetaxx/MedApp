@@ -1,19 +1,18 @@
-const jwt = require('jsonwebtoken');
+/* import jwt from 'jsonwebtoken';
 
-const authenticate = (req, res, next) => {
-    const token = req.headers['authorization'];
-
+function verifyToken(req, res, next) {
+    const token = req.header('Authorization');
     if (!token) {
-        return res.status(403).json({ error: 'Access Denied!' });
+        return res.status(401).json({error: 'Access Denied!'});
     }
 
     try {
-        const decoded = jwt.verify(token, 'sua_chave_secreta'); // Verifica o token
-        req.user = decoded; // Salva a informação do usuário no request
-        next(); // Prossegue para o próximo middleware ou rota
+        const decoded = jwt.verify(token, 'you-secret-key');
+        req.doctorId = decoded.doctorId;
+        next();
     } catch (error) {
-        return res.status(401).json({ error: 'Authentication failed!' });
+        res.status(401).json({error: 'Invalid token!'});
     }
 };
 
-module.exports = authenticate;
+export default verifyToken; */

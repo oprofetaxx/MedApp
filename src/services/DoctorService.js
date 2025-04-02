@@ -1,5 +1,6 @@
 import DoctorRepository from "../repositories/DoctorRepository.js"
 
+
 const getAllDoctors = async () => {
     return await DoctorRepository.getAllDoctors();
 }

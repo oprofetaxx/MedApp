@@ -8,13 +8,9 @@ const getAppointment = async(id) => {
     return await AppointmentRepository.getAppointment(id);
 }
 
-const saveAppointment = async({ date, doctorId, patientId, time }) => {
-    console.log("Dados recebidos para salvar o agendamento:", { date, doctorId, patientId, time });
-    // Salve o agendamento no banco de dados aqui
-    const appointment = await AppointmentRepository.saveAppointment({ date, doctorId, patientId, time });
-    console.log("Agendamento criado no banco:", appointment);
-    return appointment;
-};
+const saveAppointment = async({date, doctorId, pacientId}) => {
+    return await AppointmentRepository.saveAppointment({date, doctorId, pacientId});
+}
 
 const updateAppointment = async(id, {date, doctorId, pacientId}) => {
     return await AppointmentRepository.updateAppointment(id, {date, doctorId, pacientId});

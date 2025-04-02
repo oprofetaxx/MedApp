@@ -1,3 +1,2 @@
-TEMOS QUE CRIAR CREATE PRESCRIPTION , VERIFICAR O ERRO DO LIST ALL PRESCRIPTION
-
-TESTAR O PDF SE ESTA BAXANDO O CONTEUDO CERTO , ACHO QUE TEMOS QUE APENAS COLOCAR A TABELA COM EXCLUSARO DE DOCUMENTOS , BAIXAR DOCUMENTOS ,E MODIFICAR DOCUMETNOS 
+codigo correto agora , so melhorias com o tempo a serem feitas , mas idea de adicionar um nome no create prescription , e adicionar na 
+tabela de prescription all um nome de pasciente para a medicação 

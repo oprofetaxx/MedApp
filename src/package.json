@@ -4,6 +4,8 @@
   "description": "Mini Projeto da Disciplina ProgramacaoII",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "jest": {
@@ -11,19 +13,19 @@
       "./__tests__/database"
     ]
   },
-  "author": "Ana Teixeira",
+  "author": "Joao Franco",
   "license": "ISC",
   "type": "module",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
-    "express": "^4.18.2",
+    "express": "^4.21.2",
     "jest": "^29.7.0",
     "jsonwebtoken": "^9.0.2",
-    "mongodb-memory-server": "^9.1.6",
-    "mongoose": "^8.0.4",
+    "mongodb-memory-server": "^9.5.0",
+    "mongoose": "^8.13.1",
     "multer": "^1.4.5-lts.1",
-    "next": "^14.2.26",
+    "next": "^14.0.4",
     "path": "^0.12.7",
     "pdfkit": "^0.14.0",
     "process": "^0.11.10"

@@ -1,36 +1,35 @@
-"use client"
-import React, { useState } from "react";
-import axios from 'axios';
+import React from "react";
+import Link from "next/link";
 
-export default function FakeApi() {
-
-    const [fakeApiData, setFakeApiData] = useState(null);
-
-    const requestFakeApi = async () => {
-        try {
-            const response = await axios.get('https://jsonplaceholder.typicode.com/users');
-            setFakeApiData(response.data);
-        } catch (e) {
-            console.log(e);
-        }
-
-    }
-
+export default function Home() {
     return (
-        <>
-            <h1>Dados Fake Api</h1>
-            <button className="bg-green-500 p-2 inline-block text-white text-sm"
-             onClick={(e) => requestFakeApi()}>Buscar dados Fake Api</button>
-            <table>
-                {!!fakeApiData && fakeApiData.map((data: any) => (
-                    <tr>
-                        <td className='border border-slate-300'>{data.name}</td>
-                        <td className='border border-slate-300 text-center'>{data.username}</td>
-                        <td className='border border-slate-300 text-center'>{data.email}</td>
-                        <td className='border border-slate-300 text-center'>{data.phone}</td>
-                    </tr>
-                ))}
-            </table>
-        </>
-    )
+        <div>
+            <br />
+            <h1 className="text-2xl font-bold">Doctors</h1>
+            <Link className="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="/doctor/create">Create new doctor</Link>
+            <br />
+            <Link className="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="/doctor/list">List all doctors</Link>
+            <br /><br />
+            <h1 className="text-2xl font-bold">Pacients</h1>
+            <Link className="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="/pacient/create">Create new pacient</Link>
+            <br />
+            <Link className="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="/pacient/list">List all pacients</Link>
+            <br /><br />
+            <h1 className="text-2xl font-bold">Appointments</h1>
+            <Link className="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="/appointment/create">Create new appointment</Link>
+            <br />
+            <Link className="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="/appointment/list">List all appointments</Link>
+            <br /><br />
+            <h1 className="text-2xl font-bold">Prescriptions</h1>
+            <Link className="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="/prescription/1/create">
+                  Create new prescription
+            </Link>
+            <br />
+                <Link className="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="/prescription/list">
+             List all prescriptions
+                </Link>
+<br /><br />
+            <Link className="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="/fake">Access FakeApi</Link>
+        </div>
+    );
 }

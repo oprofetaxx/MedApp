@@ -1,6 +1,6 @@
 import express from "express";
 import pkg  from "body-parser";
-import router from "./routes/router.js";  // Certifique-se de que o caminho do arquivo está correto
+import router from "./routes/router.js";
 import db from "./database/database.js";
 import cors from "cors";
 
@@ -8,14 +8,16 @@ const app = express();
 const { json, urlencoded } = pkg;
 
 app.use(json());
-app.use(urlencoded({ extended: true }));
-app.use(cors());
-app.use(express.json());
+app.use(urlencoded({extended: true}));
+app.use('/prescription', router);
 
-
-
-app.use("/", router);  // Aqui estamos configurando o prefixo "/api" para todas as rotas
+app.use(cors({
+    origin: 'http://localhost:3000',  // Ajuste para a URL do seu frontend
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+}));
 
 app.listen(3001, function() {
     console.log("Listening to port 3001");
 });
+
+app.use("/", router);
